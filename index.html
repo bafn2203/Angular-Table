@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head lang="en">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+    <title>Angular Table</title>
+
+        <!-- Angular Version Scripts -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.min.js"></script>
+        <script src="app.js"></script>
+
+        <!-- Bootstrap -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js" integrity="sha384-3ceskX3iaEnIogmQchP8opvBy3Mi7Ce34nWjpBIwVTHfGYWQS9jwHDVRnpKKHJg7" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.3.7/js/tether.min.js" integrity="sha384-XTs3FgkjiBgo8qjEjBk0tGmf3wPrWtA6coPfQDfFEY8AnYJwjalXCiosYRBIBZX8" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/js/bootstrap.min.js" integrity="sha384-BLiI7JTZm+JWlgKa0M0kGRpJbF2J8q+qreVrKBC47e3K6BW78kGLrCkeRX6I9RoK" crossorigin="anonymous"></script>
+
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/css/tether-theme-arrows-dark.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css" integrity="sha384-AysaV+vQoT3kOAXZkl02PThvDr8HYKPZhNT5h/CXfBThSRXQ6jW5DO2ekP5ViFdi" crossorigin="anonymous">
+        <!-- Fontawesome -->
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+
+</head>
+
+<body data-ng-controller="MainCtrl as vm">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-2">
+                    <h4>Search:</h4> 
+                        <input type="text" class="form-control form-control-sm form-control-rounded" placeholder="Search..." ng-model="search.first_name">
+                    <br />
+                                              
+                    <h4>Modified Date Picker:</h4> 
+                    <br />
+                            From: 
+                                <input class="form-control" ng-model="date.from" type="date" />
+                        
+                            To: 
+                                <input class="form-control" ng-model="date.to" type="date" />    
+                    <br />
+                    <h4>Vip Filter:</h4> 
+                                <button class="btn btn-success " ng-hide="vip" ng-click="vip = !vip">Show Vips</button>
+                                <button title="Compose" class="btn btn-primary" ng-hide="!vip" ng-click="vip = !vip">Show all</button>
+                    <br />
+                    <br />
+                    <h4>Limit to:</h4> 
+                    <div class="dropdown">
+                            <button class="btn btn-warning dropdown-toggle" type="button" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                {{page}}
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenu">
+                                <a class="dropdown-item" ng-click="onSelectBoxChange('ten')">10</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" ng-click="onSelectBoxChange('twenty')">20</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" ng-click="onSelectBoxChange('fifty')">50</a>
+                            </div>
+                        </div>
+                                
+            </div>
+            <div class="col-md-10">
+                
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>id</th>
+                            <th ng-click="sortBy('first_name')" title="sort by first name" class="sortable">first_name</th>
+                            <th>last_name</th>
+                            <th>email </th>
+                            <th>modified</th>
+                            <th>country</th>
+                            <th>vip</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="n in data | orderBy:propertyName:reverse | filter:search | dateFilter:date.from:date.to | vipFilter:vip | limitTo:page">
+                            <td>{{n.id}}</td>
+                            <td ng-bind-html="n.first_name | highlight:search.first_name">{{n.first_name}}</td>
+                            <td>{{n.last_name}}</td>
+                            <td>{{n.email}}</td>
+                            <td>{{n.modified | date:'yyyy-MM-dd'}}</td>
+                            <td>{{n.country}}</td>
+                            <td ng-if="n.vip === true"><i class="fas fa-check"></i></td>
+                            <td ng-if="n.vip === false"><i class="fas fa-times"></i></td>
+                        </tr>
+                    </tbody>
+                </table>
+                the table counts {{data.length}} entries
+            </div>
+        </div>
+    </div>
+    <style>
+            .highlighted { background: yellow; }
+            .sortable { background:#ddeaff; cursor:pointer; }
+        </style>
+</body>
+</html>
+
